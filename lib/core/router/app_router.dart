@@ -5,6 +5,8 @@ import 'package:nfcreadertools/features/bottom_nav/presentation/screens/bottom_n
 import 'package:nfcreadertools/features/get_started/presentation/screens/get_started_screen_first_screen.dart';
 import 'package:nfcreadertools/features/get_started/presentation/screens/get_started_screen_second_screen.dart';
 import 'package:nfcreadertools/features/get_started/presentation/screens/get_started_screen_third_screen.dart';
+import 'package:nfcreadertools/features/nfc_add_writing_record/presentation/screens/nfc_add_writing_record_screen.dart';
+import 'package:nfcreadertools/features/nfc_writing_tools_records/presentation/screens/nfc_writing_tools_records_screen.dart';
 import 'package:nfcreadertools/features/splash/presentation/screens/splash_screen.dart';
 
 class AppRouter {
@@ -70,6 +72,24 @@ class AppRouter {
         name: "bottomNav",
         builder: (context, state) {
           return BottomNav();
+        },
+      ),
+
+      /// nfc writing tools records screen
+      GoRoute(
+        path: "/nfcWritingToolsRecordsScreen",
+        name: "nfcWritingToolsRecordsScreen",
+        builder: (context, state) {
+          return NfcWritingToolsRecordsScreen();
+        },
+      ),
+
+      /// nfc add writing records screens
+      GoRoute(
+        path: "/nfcAddWritingRecordsScreen",
+        name: "nfcAddWritingRecordsScreen",
+        builder: (context, state) {
+          return NfcAddWritingRecordScreen();
         },
       ),
     ],
