@@ -6,6 +6,12 @@ import 'package:nfcreadertools/features/get_started/presentation/screens/get_sta
 import 'package:nfcreadertools/features/get_started/presentation/screens/get_started_screen_second_screen.dart';
 import 'package:nfcreadertools/features/get_started/presentation/screens/get_started_screen_third_screen.dart';
 import 'package:nfcreadertools/features/nfc_add_writing_record/presentation/screens/nfc_add_writing_record_screen.dart';
+import 'package:nfcreadertools/features/nfc_contact_record_writing/presentation/screens/nfc_contact_record_writing_screen.dart';
+import 'package:nfcreadertools/features/nfc_location_record_writing/presentation/screens/nfc_location_record_writing_screen.dart';
+import 'package:nfcreadertools/features/nfc_social_share_record_writing/presentation/screens/nfc_social_share_record_writing_screen.dart';
+import 'package:nfcreadertools/features/nfc_text_record_writing/presentation/screens/nfc_text_record_writing_screen.dart';
+import 'package:nfcreadertools/features/nfc_url_record_writing/presentation/screens/nfc_url_record_writing_screen.dart';
+import 'package:nfcreadertools/features/nfc_wifi_record_writing/presentation/screens/nfc_wifi_record_writing_screen.dart';
 import 'package:nfcreadertools/features/nfc_writing_tools_records/presentation/screens/nfc_writing_tools_records_screen.dart';
 import 'package:nfcreadertools/features/splash/presentation/screens/splash_screen.dart';
 
@@ -90,6 +96,60 @@ class AppRouter {
         name: "nfcAddWritingRecordsScreen",
         builder: (context, state) {
           return NfcAddWritingRecordScreen();
+        },
+      ),
+
+      /// nfc contact record writing screen
+      GoRoute(
+        path: "/nfcContactRecordWritingScreen",
+        name: "nfcContactRecordWritingScreen",
+        builder: (context, state) {
+          return NfcContactRecordWritingScreen();
+        },
+      ),
+
+      /// nfc location record writing screen
+      GoRoute(
+        path: "/nfcLocationRecordWritingScreen",
+        name: "nfcLocationRecordWritingScreen",
+        builder: (context, state) {
+          return NfcLocationRecordWritingScreen();
+        },
+      ),
+
+      /// nfc social share record writing screen
+      GoRoute(
+        path: "/nfcSocialShareRecordWritingScreen",
+        name: "nfcSocialShareRecordWritingScreen",
+        builder: (context, state) {
+          return NfcSocialShareRecordWritingScreen();
+        },
+      ),
+
+      /// nfc text record writing screen
+      GoRoute(
+        path: "/nfcTextRecordWritingScreen",
+        name: "nfcTextRecordWritingScreen",
+        builder: (context, state) {
+          return NfcTextRecordWritingScreen();
+        },
+      ),
+
+      /// nfc url record writing screen
+      GoRoute(
+        path: "/nfcUrlRecordWritingScreen",
+        name: "nfcUrlRecordWritingScreen",
+        builder: (context, state) {
+          return NfcUrlRecordWritingScreen();
+        },
+      ),
+
+      /// nfc wifi record writing screen
+      GoRoute(
+        path: "/nfcWifiRecordWritingScreen",
+        name: "nfcWifiRecordWritingScreen",
+        builder: (context, state) {
+          return NfcWifiRecordWritingScreen();
         },
       ),
     ],
