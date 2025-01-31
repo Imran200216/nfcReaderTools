@@ -17,7 +17,7 @@ class AuthSignUpScreen extends StatelessWidget {
     /// auth sign up form key
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-    /// textfield controllers
+    /// text field controllers
     final TextEditingController authSignUpEmailController =
         TextEditingController();
     final TextEditingController authSignUpPasswordController =
@@ -161,7 +161,8 @@ class AuthSignUpScreen extends StatelessWidget {
                       )
                           .then(
                         (value) {
-                          GoRouter.of(context).pushReplacementNamed("bottomNav");
+                          GoRouter.of(context)
+                              .pushReplacementNamed("bottomNav");
                         },
                       );
                     }

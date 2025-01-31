@@ -2,40 +2,99 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nfcreadertools/commons/widgets/custom_app_bar.dart';
+import 'package:nfcreadertools/commons/widgets/custom_drop_down_text_field.dart';
 import 'package:nfcreadertools/commons/widgets/custom_text_btn.dart';
+import 'package:nfcreadertools/commons/widgets/nfc_writing_text_field.dart';
+import 'package:nfcreadertools/features/nfc_social_share_record_writing/provider/nfc_social_share_provider.dart';
+import 'package:provider/provider.dart';
 
-class NfcSocialShareRecordWritingScreen extends StatelessWidget {
+class NfcSocialShareRecordWritingScreen extends StatefulWidget {
   const NfcSocialShareRecordWritingScreen({super.key});
 
   @override
+  State<NfcSocialShareRecordWritingScreen> createState() =>
+      _NfcSocialShareRecordWritingScreenState();
+}
+
+class _NfcSocialShareRecordWritingScreenState
+    extends State<NfcSocialShareRecordWritingScreen> {
+  /// form key
+  final _formKey = GlobalKey<FormState>();
+
+  /// controller
+  final TextEditingController _socialNetworkUrlController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    _socialNetworkUrlController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    /// nfc social share provider
+    final nfcSocialShareProvider = Provider.of<NfcSocialShareProvider>(context);
+
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(
           actions: [
             CustomTextBtn(
               textBtnTitleText: "Save",
-              onTap: () {},
+              onTap: () {
+                if (_formKey.currentState!.validate()) {
+                  // Proceed with saving logic
+                }
+              },
             ),
           ],
           appBarTitleText: "Add Social Share Record",
-          leadingIconOnTap: () {
-            GoRouter.of(context).pop();
-          },
+          leadingIconOnTap: () => GoRouter.of(context).pop(),
           leadingIconPath: "arrow-back",
           centerTitle: true,
         ),
-        body: Container(
-          margin: EdgeInsets.symmetric(
-            vertical: 20.h,
-            horizontal: 20.w,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
+        body: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                /// Social Network Dropdown Field
+                CustomDropdownTextField<String>(
+                  hintText: "Select a social option",
+                  labelText: "*Social Networks",
+                  items: [
+                    "Instagram",
+                    "Facebook",
+                    "Linktree",
+                    "Github",
+                    "Youtube",
+                    "Others",
+                  ],
+                  value: nfcSocialShareProvider.selectedSocialPlatform,
+                  onChanged: nfcSocialShareProvider.setSocialPlatform,
+                  validator: (value) =>
+                      value == null ? "Please select a social network" : null,
+                ),
+                SizedBox(height: 20.h),
 
-            ],
+                /// Social Network URL Field
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w),
+                  child: NfcWritingTextField(
+                    textEditingController: _socialNetworkUrlController,
+                    hintText: "Enter Social Network URL",
+                    labelText: "Social URL",
+                    prefixIcon: Icons.link_sharp,
+                    validator: (value) => value == null || value.trim().isEmpty
+                        ? "Please enter a valid social network URL"
+                        : null,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -47,7 +47,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onTap: widget.onTap,
       controller: widget.textEditingController,
       style: TextStyle(
-          fontFamily: "DM Sans",
+        fontFamily: "DM Sans",
         fontWeight: FontWeight.w600,
         fontSize: 13.sp,
         color: AppColors.titleColor,
@@ -113,7 +113,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           horizontal: 12.w,
         ),
         errorStyle: TextStyle(
-            fontFamily: "DM Sans",
+          fontFamily: "DM Sans",
           color: AppColors.errorTextFieldColor,
           fontSize: 12.sp,
           fontWeight: FontWeight.w600,

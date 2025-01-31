@@ -9,6 +9,9 @@ import 'package:nfcreadertools/features/auth/presentation/provider/apple_sign_in
 import 'package:nfcreadertools/features/auth/presentation/provider/email_password_auth_provider.dart';
 import 'package:nfcreadertools/features/auth/presentation/provider/google_sign_in_provider.dart';
 import 'package:nfcreadertools/features/bottom_nav/presentation/provider/bottom_nav_provider.dart';
+import 'package:nfcreadertools/features/nfc_social_share_record_writing/provider/nfc_social_share_provider.dart';
+import 'package:nfcreadertools/features/nfc_text_record_writing/provider/nfc_text_record_writing_provider.dart';
+import 'package:nfcreadertools/features/nfc_wifi_record_writing/provider/nfc_wifi_setting_provider.dart';
 import 'package:nfcreadertools/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
@@ -53,6 +56,16 @@ class MyApp extends StatelessWidget {
 
         /// apple auth provider
         ChangeNotifierProvider(create: (context) => AppleSignInProvider()),
+
+        /// nfc wifi setting provider
+        ChangeNotifierProvider(create: (context) => WifiSettingsProvider()),
+
+        /// nfc social share provider
+        ChangeNotifierProvider(create: (context) => NfcSocialShareProvider()),
+
+        /// nfc text record writing provider
+        ChangeNotifierProvider(
+            create: (context) => NfcTextRecordWritingProvider()),
       ],
       builder: (context, child) {
         return ScreenUtilInit(
