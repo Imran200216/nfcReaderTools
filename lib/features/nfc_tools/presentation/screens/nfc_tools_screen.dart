@@ -29,7 +29,12 @@ class NfcToolsScreen extends StatelessWidget {
               children: [
                 /// read the nfc card
                 CustomNfcToolsCard(
-                  cardOnTap: () {},
+                  cardOnTap: () {
+                    // showModalBottomSheet(context: context, builder: (context) {
+                    //
+                    //   return
+                    // },);
+                  },
                   cardTitle: "Read",
                   cardSubTitle:
                       "Bring your phone to NFC Tag and read the information written on it.",

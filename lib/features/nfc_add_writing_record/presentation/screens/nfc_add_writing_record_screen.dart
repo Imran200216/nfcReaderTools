@@ -11,36 +11,47 @@ class NfcAddWritingRecordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<NFCWritingCardData> cardData = [
+      /// text record
       NFCWritingCardData(
         iconPath: "assets/icons/svg/text-record.svg",
         title: "Text",
         subtitle: "Add a text record",
         route: "nfcTextRecordWritingScreen",
       ),
+
+      /// URL record
       NFCWritingCardData(
         iconPath: "assets/icons/svg/url-record.svg",
         title: "URL",
         subtitle: "Add a URL record",
         route: "nfcUrlRecordWritingScreen",
       ),
+
+      /// contact record
       NFCWritingCardData(
         iconPath: "assets/icons/svg/contact-record.svg",
         title: "Contact",
         subtitle: "Add a contact record",
         route: "nfcContactRecordWritingScreen",
       ),
+
+      /// write record
       NFCWritingCardData(
         iconPath: "assets/icons/svg/wifi-record.svg",
         title: "Wifi",
         subtitle: "configure a Wifi-network",
         route: "nfcWifiRecordWritingScreen",
       ),
+
+      /// location record
       NFCWritingCardData(
         iconPath: "assets/icons/svg/location-record.svg",
         title: "Location",
         subtitle: "Add a location",
         route: "nfcLocationRecordWritingScreen",
       ),
+
+      /// share record
       NFCWritingCardData(
         iconPath: "assets/icons/svg/share-record.svg",
         title: "Social Networks",

@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:nfcreadertools/core/colors/app_colors.dart';
 import 'package:nfcreadertools/features/settings/presentation/widgets/custom_profile_divider.dart';
 import 'package:nfcreadertools/features/settings/presentation/widgets/custom_profile_list_tile.dart';
@@ -12,7 +14,6 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: AppColors.whiteColor,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
@@ -47,9 +48,7 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(
-                      height: 20.h,
-                    ),
+                    SizedBox(height: 20.h),
 
                     Row(
                       spacing: 14.w,
@@ -114,9 +113,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: 12.h,
-            ),
+            SizedBox(height: 12.h),
 
             /// about dev
             CustomProfileListTile(
@@ -162,7 +159,14 @@ class SettingsScreen extends StatelessWidget {
             /// log out
             CustomProfileListTile(
               listTileTitleText: "Logout",
-              listTileOnTap: () {},
+              listTileOnTap: () {
+                FirebaseAuth.instance.signOut().then(
+                  (value) {
+                    GoRouter.of(context)
+                        .pushReplacementNamed("getStartedFirstScreen");
+                  },
+                );
+              },
               leadingIconPath: "logout",
             ),
 

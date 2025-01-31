@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>901150215905-86gg0ha9f4vh3a8l5fu76f8g17cdngnh.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.901150215905-86gg0ha9f4vh3a8l5fu76f8g17cdngnh</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>901150215905-7sig5mch56hj7ku76ga497akrus0s1ei.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAfWkBRwNxsqoPeIKbVEtGEI5PzIJkXJjY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>901150215905</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.princeappstudio.nfctools</string>
+	<key>PROJECT_ID</key>
+	<string>nfcreaderwriterapp</string>
+	<key>STORAGE_BUCKET</key>
+	<string>nfcreaderwriterapp.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:901150215905:ios:10bee5835e733d0da4b1a0</string>
+</dict>
+</plist>

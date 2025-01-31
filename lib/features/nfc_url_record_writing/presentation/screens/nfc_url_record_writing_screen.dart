@@ -6,18 +6,29 @@ import 'package:nfcreadertools/commons/widgets/custom_text_btn.dart';
 import 'package:nfcreadertools/commons/widgets/nfc_writing_text_field.dart';
 
 class NfcUrlRecordWritingScreen extends StatelessWidget {
-  const NfcUrlRecordWritingScreen({super.key});
+  NfcUrlRecordWritingScreen({super.key});
+
+  /// Form key for validation
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    /// controllers
+    final TextEditingController urlController = TextEditingController();
+
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(
           actions: [
-            /// save btn
+            /// Save button with validation
             CustomTextBtn(
               textBtnTitleText: "Save",
-              onTap: () {},
+              onTap: () {
+                if (_formKey.currentState!.validate()) {
+                  // Form is valid, proceed with saving
+                  print("URL Saved: ${urlController.text}");
+                }
+              },
             ),
           ],
           appBarTitleText: "Add a URL",
@@ -32,17 +43,33 @@ class NfcUrlRecordWritingScreen extends StatelessWidget {
             horizontal: 20.w,
             vertical: 20.h,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              /// custom url text field
-              NfcWritingTextField(
-                hintText: "xxxxxxx.xxx",
-                labelText: "*Enter your URL",
-                prefixIcon: Icons.link,
-              ),
-            ],
+          child: Form(
+            key: _formKey, // Assign form key
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                /// Custom URL text field with validation
+                NfcWritingTextField(
+                  textEditingController: urlController,
+                  hintText: "xxxxxxx.xxx",
+                  labelText: "*Enter your URL",
+                  prefixIcon: Icons.link,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a URL";
+                    }
+                    final urlPattern =
+                        r'^(https?:\/\/)?([\w\d-]+\.)+\w{2,}(\/.*)?$';
+                    final regex = RegExp(urlPattern);
+                    if (!regex.hasMatch(value)) {
+                      return "Please enter a valid URL";
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

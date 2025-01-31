@@ -6,12 +6,12 @@ import 'package:nfcreadertools/core/services/custom_haptic.dart';
 
 class CustomAuthSocialSignInBtn extends StatelessWidget {
   final String socialIconPath;
-  final VoidCallback onbtnTap;
+  final VoidCallback onBtnTap;
 
   const CustomAuthSocialSignInBtn({
     super.key,
     required this.socialIconPath,
-    required this.onbtnTap,
+    required this.onBtnTap,
   });
 
   @override
@@ -19,7 +19,7 @@ class CustomAuthSocialSignInBtn extends StatelessWidget {
     return InkWell(
       onTap: () {
         CustomHapticFeedbackUtility.mediumImpact();
-        onbtnTap();
+        onBtnTap();
       },
       child: Container(
         height: 48.h,

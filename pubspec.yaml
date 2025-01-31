@@ -39,7 +39,7 @@ dependencies:
   # state management
   provider: ^6.1.2
   # router
-  go_router: ^14.7.1
+  go_router: ^14.7.2
   # svg
   flutter_svg: ^2.0.17
   # lottie animation
@@ -48,18 +48,35 @@ dependencies:
   nfc_manager: ^3.5.0
   # local storage 
   hive: ^2.2.3
+  hive_flutter: ^1.1.0
   # cached network image
   cached_network_image: ^3.4.1
   # url launcher
   url_launcher: ^6.3.1
   # toast
   toastification: ^2.3.0
+  # contacts
+  flutter_contacts: ^1.1.9+2
+  # firebase
+  firebase_core: ^3.10.1
+  # firebase auth
+  firebase_auth: ^5.4.1
+  # google sign in
+  google_sign_in: ^6.2.2
+  # apple sign in
+  sign_in_with_apple: ^6.1.4
+  # cloud firestore
+  cloud_firestore: ^5.6.2
+
+
 
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  # app package name for both android and ios
+  change_app_package_name: ^1.4.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

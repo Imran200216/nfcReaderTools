@@ -62,27 +62,27 @@ class _NfcWritingTextFieldState extends State<NfcWritingTextField> {
           borderRadius: BorderRadius.circular(6.r),
           borderSide: widget.hasBorder
               ? BorderSide(
-            color: AppColors.outlinedBtnBorderColor,
-            width: 1,
-          )
+                  color: AppColors.outlinedBtnBorderColor,
+                  width: 1,
+                )
               : BorderSide.none, // No border if hasBorder is false
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6.r),
           borderSide: widget.hasBorder
               ? BorderSide(
-            color: AppColors.outlinedBtnBorderColor,
-            width: 1,
-          )
+                  color: AppColors.outlinedBtnBorderColor,
+                  width: 1,
+                )
               : BorderSide.none, // No border if hasBorder is false
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6.r),
           borderSide: widget.hasBorder
               ? BorderSide(
-            color: AppColors.primaryColor,
-            width: 1.5,
-          )
+                  color: AppColors.primaryColor,
+                  width: 1.5,
+                )
               : BorderSide.none, // No border if hasBorder is false
         ),
         hintText: widget.hintText,
@@ -106,16 +106,16 @@ class _NfcWritingTextFieldState extends State<NfcWritingTextField> {
         ),
         suffixIcon: widget.isPassword
             ? IconButton(
-          icon: Icon(
-            _isObscure ? Icons.visibility_off : Icons.visibility,
-            color: AppColors.textFieldHintColor,
-          ),
-          onPressed: () {
-            setState(() {
-              _isObscure = !_isObscure;
-            });
-          },
-        )
+                icon: Icon(
+                  _isObscure ? Icons.visibility_off : Icons.visibility,
+                  color: AppColors.textFieldHintColor,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isObscure = !_isObscure;
+                  });
+                },
+              )
             : null,
         contentPadding: EdgeInsets.symmetric(
           vertical: 8.h,
@@ -127,7 +127,7 @@ class _NfcWritingTextFieldState extends State<NfcWritingTextField> {
           fontSize: 12.sp,
           fontWeight: FontWeight.w600,
         ),
-        floatingLabelBehavior: FloatingLabelBehavior.always, // Ensure label is always shown
+        floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
     );
   }

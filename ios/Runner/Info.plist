@@ -45,10 +45,28 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSContactsUsageDescription</key>
+        <string>Reason we need access to the contact list</string>
 	<key>LSApplicationQueriesSchemes</key>
     <array>
       <string>sms</string>
       <string>tel</string>
+      <string>googlemaps</string>
+      <string>maps</string>
+
     </array>
+    <key>CFBundleURLTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <!-- TODO Replace this value: -->
+                    <!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+                    <string>com.googleusercontent.apps.901150215905-86gg0ha9f4vh3a8l5fu76f8g17cdngnh</string>
+                </array>
+            </dict>
+     </array>
 </dict>
 </plist>

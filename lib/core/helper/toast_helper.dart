@@ -13,7 +13,7 @@ class ToastHelper {
       title: Text(
         message,
         style: TextStyle(
-          fontFamily: "Poppins",
+          fontFamily: "DM Sans",
           fontWeight: FontWeight.w600,
           fontSize: 14,
           color: AppColors.successToastColor,
@@ -33,7 +33,7 @@ class ToastHelper {
       title: Text(
         message,
         style: TextStyle(
-          fontFamily: "Poppins",
+          fontFamily: "DM Sans",
           fontWeight: FontWeight.w600,
           fontSize: 14,
           color: AppColors.failureToastColor,

@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "901150215905",
+    "project_id": "nfcreaderwriterapp",
+    "storage_bucket": "nfcreaderwriterapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901150215905:android:90c9dfd9f5faa7b5a4b1a0",
+        "android_client_info": {
+          "package_name": "com.princeappstudio.nfctools"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901150215905-s30639pbmr4mse3474tvotln8f50acrk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.princeappstudio.nfctools",
+            "certificate_hash": "7517bf2a9f72ee60f0838235603226b9dc85edb1"
+          }
+        },
+        {
+          "client_id": "901150215905-b559tta25ngrsh29rmpn59pq8tekbp92.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5mNMkD5Jemg-ZJxAk7_qsaUGqqOMNe1w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "901150215905-b559tta25ngrsh29rmpn59pq8tekbp92.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "901150215905-50fvl2r72b12ouou7cv220j1n28njevh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nfcreadertools"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,41 +4,37 @@ import 'package:go_router/go_router.dart';
 import 'package:nfcreadertools/commons/widgets/custom_icon_filled_btn.dart';
 import 'package:nfcreadertools/commons/widgets/custom_text_field.dart';
 import 'package:nfcreadertools/core/colors/app_colors.dart';
+import 'package:nfcreadertools/features/auth/presentation/provider/email_password_auth_provider.dart';
 import 'package:nfcreadertools/features/auth/presentation/widgets/custom_auth_footer.dart';
 import 'package:nfcreadertools/features/auth/presentation/widgets/custom_auth_headers.dart';
+import 'package:provider/provider.dart';
 
-class AuthSignUpScreen extends StatefulWidget {
+class AuthSignUpScreen extends StatelessWidget {
   const AuthSignUpScreen({super.key});
 
   @override
-  State<AuthSignUpScreen> createState() => _AuthSignUpScreenState();
-}
-
-class _AuthSignUpScreenState extends State<AuthSignUpScreen> {
-  @override
   Widget build(BuildContext context) {
     /// auth sign up form key
-    final GlobalKey formKey = GlobalKey<FormState>();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     /// textfield controllers
     final TextEditingController authSignUpEmailController =
         TextEditingController();
-
     final TextEditingController authSignUpPasswordController =
         TextEditingController();
-
     final TextEditingController authSignUpConfirmPasswordController =
         TextEditingController();
 
+    /// email auth provider
+    final emailPasswordAuthProvider =
+        Provider.of<EmailPasswordAuthProvider>(context, listen: false);
+
     return SafeArea(
-      child: Scaffold( 
+      child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.authBgColor,
         body: Container(
-          margin: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 30.h,
-          ),
+          margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
           child: Form(
             key: formKey,
             child: Column(
@@ -64,9 +60,7 @@ class _AuthSignUpScreenState extends State<AuthSignUpScreen> {
                   ),
                 ),
 
-                SizedBox(
-                  height: 12.h,
-                ),
+                SizedBox(height: 12.h),
 
                 /// email address text field
                 CustomTextField(
@@ -74,11 +68,18 @@ class _AuthSignUpScreenState extends State<AuthSignUpScreen> {
                   textEditingController: authSignUpEmailController,
                   hintText: "Enter your email address...",
                   prefixIcon: Icons.email_outlined,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Email is required";
+                    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                        .hasMatch(value)) {
+                      return "Enter a valid email address";
+                    }
+                    return null;
+                  },
                 ),
 
-                SizedBox(
-                  height: 15.h,
-                ),
+                SizedBox(height: 15.h),
 
                 /// password text
                 Text(
@@ -92,9 +93,7 @@ class _AuthSignUpScreenState extends State<AuthSignUpScreen> {
                   ),
                 ),
 
-                SizedBox(
-                  height: 12.h,
-                ),
+                SizedBox(height: 12.h),
 
                 /// password text field
                 CustomTextField(
@@ -103,13 +102,19 @@ class _AuthSignUpScreenState extends State<AuthSignUpScreen> {
                   textEditingController: authSignUpPasswordController,
                   hintText: "************",
                   prefixIcon: Icons.lock_outline,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Password is required";
+                    } else if (value.length < 6) {
+                      return "Password must be at least 6 characters";
+                    }
+                    return null;
+                  },
                 ),
 
-                SizedBox(
-                  height: 15.h,
-                ),
+                SizedBox(height: 15.h),
 
-                ///  confirm password text
+                /// confirm password text
                 Text(
                   textAlign: TextAlign.center,
                   "Confirm Password",
@@ -121,9 +126,7 @@ class _AuthSignUpScreenState extends State<AuthSignUpScreen> {
                   ),
                 ),
 
-                SizedBox(
-                  height: 12.h,
-                ),
+                SizedBox(height: 12.h),
 
                 /// confirm password text field
                 CustomTextField(
@@ -132,24 +135,42 @@ class _AuthSignUpScreenState extends State<AuthSignUpScreen> {
                   textEditingController: authSignUpConfirmPasswordController,
                   hintText: "************",
                   prefixIcon: Icons.lock_outline,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Confirm password is required";
+                    } else if (value != authSignUpPasswordController.text) {
+                      return "Passwords do not match";
+                    }
+                    return null;
+                  },
                 ),
 
-                const Spacer(
-                  flex: 1,
-                ),
+                const Spacer(),
 
                 /// Sign Up btn
                 CustomIconFilledBtn(
+                  isLoading: emailPasswordAuthProvider.isLoading,
                   onTap: () {
-                    GoRouter.of(context).pushNamed("bottomNav");
+                    if (formKey.currentState!.validate()) {
+                      /// sign up functionality
+                      emailPasswordAuthProvider
+                          .signUpWithEmailPassword(
+                        authSignUpEmailController.text.trim(),
+                        authSignUpPasswordController.text.trim(),
+                        context,
+                      )
+                          .then(
+                        (value) {
+                          GoRouter.of(context).pushReplacementNamed("bottomNav");
+                        },
+                      );
+                    }
                   },
                   btnTitle: "Sign Up",
                   iconPath: "next",
                 ),
 
-                SizedBox(
-                  height: 10.h,
-                ),
+                SizedBox(height: 10.h),
 
                 /// Login screen navigation btn
                 Align(

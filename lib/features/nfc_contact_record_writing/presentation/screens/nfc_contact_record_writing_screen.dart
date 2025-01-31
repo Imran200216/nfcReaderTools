@@ -13,6 +13,13 @@ class NfcContactRecordWritingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// controllers
+    final TextEditingController contactNameController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController websiteController = TextEditingController();
+    final TextEditingController phoneNumberController = TextEditingController();
+    final TextEditingController addressController = TextEditingController();
+
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(
@@ -44,6 +51,7 @@ class NfcContactRecordWritingScreen extends StatelessWidget {
               children: [
                 /// contact name text field
                 NfcWritingTextField(
+                  textEditingController: contactNameController,
                   hintText: "John Doe",
                   labelText: "*Contact name",
                   prefixIcon: Icons.person,
@@ -51,6 +59,7 @@ class NfcContactRecordWritingScreen extends StatelessWidget {
 
                 /// email text field
                 NfcWritingTextField(
+                  textEditingController: emailController,
                   hintText: "JohnDoe@gmail.com",
                   labelText: "Email",
                   prefixIcon: Icons.email,
@@ -58,13 +67,15 @@ class NfcContactRecordWritingScreen extends StatelessWidget {
 
                 /// website text field
                 NfcWritingTextField(
-                  hintText: "www.JohnDoecompany.com",
+                  textEditingController: websiteController,
+                  hintText: "www.JohnDoeCompany.com",
                   labelText: "Website",
                   prefixIcon: Icons.web,
                 ),
 
                 /// phone number text field
                 NfcWritingTextField(
+                  textEditingController: phoneNumberController,
                   hintText: "+91 1234567890",
                   labelText: "Phone Number",
                   prefixIcon: Icons.phone,
@@ -72,6 +83,7 @@ class NfcContactRecordWritingScreen extends StatelessWidget {
 
                 /// phone number text field
                 NfcWritingTextField(
+                  textEditingController: addressController,
                   hintText: "01 Puducherry City",
                   labelText: "Address",
                   prefixIcon: Icons.location_city,
@@ -88,7 +100,7 @@ class NfcContactRecordWritingScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Import Your Contact",
+                        "Import From Contact",
                         style: TextStyle(
                           fontFamily: "DM Sans",
                           fontSize: 14.sp,

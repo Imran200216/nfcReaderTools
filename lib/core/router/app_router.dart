@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nfcreadertools/features/auth/presentation/screens/auth_login_screen.dart';
 import 'package:nfcreadertools/features/auth/presentation/screens/auth_sign_up_screen.dart';
 import 'package:nfcreadertools/features/bottom_nav/presentation/screens/bottom_nav.dart';
@@ -23,7 +24,9 @@ class AppRouter {
         path: "/",
         name: "splashScreen",
         builder: (context, state) {
-          return SplashScreen();
+          return SplashScreen(
+            onDecideRoute: _decideNextRoute,
+          );
         },
       ),
 
@@ -154,4 +157,18 @@ class AppRouter {
       ),
     ],
   );
+
+  static Future<String> _decideNextRoute() async {
+    /// To check the get started status for user
+    var userGetStartedBox = Hive.box("userGetStartedStatusBox");
+    bool userGetStartedStatus =
+        userGetStartedBox.get("userGetStartedStatus", defaultValue: false);
+
+    // Return the appropriate route based on login status
+    if (userGetStartedStatus) {
+      return "/bottomNav";
+    } else {
+      return "/getStartedFirstScreen";
+    }
+  }
 }
