@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:nfcreadertools/commons/provider/nfc_notifier.dart';
 import 'package:nfcreadertools/core/colors/app_colors.dart';
 import 'package:nfcreadertools/core/router/app_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,6 +67,9 @@ class MyApp extends StatelessWidget {
         /// nfc text record writing provider
         ChangeNotifierProvider(
             create: (context) => NfcTextRecordWritingProvider()),
+
+        /// nfc notifier provider
+        ChangeNotifierProvider(create: (context) => NFCNotifier()),
       ],
       builder: (context, child) {
         return ScreenUtilInit(

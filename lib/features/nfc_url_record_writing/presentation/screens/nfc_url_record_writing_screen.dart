@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nfcreadertools/commons/provider/nfc_notifier.dart';
 import 'package:nfcreadertools/commons/widgets/custom_app_bar.dart';
 import 'package:nfcreadertools/commons/widgets/custom_text_btn.dart';
 import 'package:nfcreadertools/commons/widgets/nfc_writing_text_field.dart';
+import 'package:nfcreadertools/core/helper/toast_helper.dart';
+import 'package:provider/provider.dart';
 
 class NfcUrlRecordWritingScreen extends StatelessWidget {
   NfcUrlRecordWritingScreen({super.key});
@@ -16,6 +19,9 @@ class NfcUrlRecordWritingScreen extends StatelessWidget {
     /// controllers
     final TextEditingController urlController = TextEditingController();
 
+    /// nfc notifier provider
+    final nfcProvider = Provider.of<NFCNotifier>(context);
+
     return SafeArea(
       child: Scaffold(
         appBar: CustomAppBar(
@@ -25,8 +31,29 @@ class NfcUrlRecordWritingScreen extends StatelessWidget {
               textBtnTitleText: "Save",
               onTap: () {
                 if (_formKey.currentState!.validate()) {
-                  // Form is valid, proceed with saving
-                  print("URL Saved: ${urlController.text}");
+                  /// writing the URL Record data in the NFC Tag
+                  nfcProvider.startNFCOperation(
+                    nfcOperation: NFCOperation.write,
+                    dataType: "URL",
+                    payload: urlController.text.trim(),
+                    context: context,
+                  );
+
+                  // Debug print
+                  print("NFC operation result: ${nfcProvider.isSuccess}");
+
+                  // Show a toast based on the result
+                  if (nfcProvider.isSuccess) {
+                    ToastHelper.showSuccessToast(
+                      context: context,
+                      message: "The URL Record is added to the NFC Tag",
+                    );
+                  } else {
+                    ToastHelper.showErrorToast(
+                      context: context,
+                      message: "Not Added successfully!",
+                    );
+                  }
                 }
               },
             ),

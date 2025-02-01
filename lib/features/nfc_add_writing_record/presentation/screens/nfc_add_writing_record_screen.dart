@@ -58,6 +58,14 @@ class NfcAddWritingRecordScreen extends StatelessWidget {
         subtitle: "Add a social network link",
         route: "nfcSocialShareRecordWritingScreen",
       ),
+
+      /// email record
+      NFCWritingCardData(
+        iconPath: "assets/icons/svg/email-record.svg",
+        title: "Mail",
+        subtitle: "Add a mail record",
+        route: "nfcMailRecordWritingScreen",
+      ),
     ];
 
     return SafeArea(

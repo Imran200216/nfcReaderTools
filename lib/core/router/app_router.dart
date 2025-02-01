@@ -9,6 +9,7 @@ import 'package:nfcreadertools/features/get_started/presentation/screens/get_sta
 import 'package:nfcreadertools/features/nfc_add_writing_record/presentation/screens/nfc_add_writing_record_screen.dart';
 import 'package:nfcreadertools/features/nfc_contact_record_writing/presentation/screens/nfc_contact_record_writing_screen.dart';
 import 'package:nfcreadertools/features/nfc_location_record_writing/presentation/screens/nfc_location_record_writing_screen.dart';
+import 'package:nfcreadertools/features/nfc_mail_record_writing/presentation/nfc_mail_record_writing_screen.dart';
 import 'package:nfcreadertools/features/nfc_social_share_record_writing/presentation/screens/nfc_social_share_record_writing_screen.dart';
 import 'package:nfcreadertools/features/nfc_text_record_writing/presentation/screens/nfc_text_record_writing_screen.dart';
 import 'package:nfcreadertools/features/nfc_url_record_writing/presentation/screens/nfc_url_record_writing_screen.dart';
@@ -153,6 +154,15 @@ class AppRouter {
         name: "nfcWifiRecordWritingScreen",
         builder: (context, state) {
           return NfcWifiRecordWritingScreen();
+        },
+      ),
+
+      /// nfc mail record writing screen
+      GoRoute(
+        path: "/nfcMailRecordWritingScreen",
+        name: "nfcMailRecordWritingScreen",
+        builder: (context, state) {
+          return NfcMailRecordWritingScreen();
         },
       ),
     ],
