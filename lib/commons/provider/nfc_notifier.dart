@@ -20,10 +20,6 @@ class NFCNotifier extends ChangeNotifier {
   String get message => _message;
 
   /// Start the NFC operation (read or write).
-  /// [context] is required here to show the alert dialog if NFC is not available.
-  /// [payload] is an optional parameter containing the data to be written.
-  /// Returns `true` if the NFC operation was initiated (i.e. NFC is available),
-  /// or `false` if NFC is unavailable.
   Future<bool> startNFCOperation({
     required BuildContext context,
     required NFCOperation nfcOperation,
@@ -38,9 +34,9 @@ class NFCNotifier extends ChangeNotifier {
 
       bool isAvail = await NfcManager.instance.isAvailable();
 
-      // If NFC is not available, show an alert dialog and exit the operation.
       if (!isAvail) {
         _isProcessing = false;
+        _isSuccess = false;
         _message = "NFC Unavailable";
         notifyListeners();
 
@@ -81,22 +77,25 @@ class NFCNotifier extends ChangeNotifier {
         return false;
       }
 
-      // NFC is available; update the message accordingly.
-      if (nfcOperation == NFCOperation.read) {
-        _message = "Scanning...";
-      } else if (nfcOperation == NFCOperation.write) {
-        _message = "Writing to Tag...";
-      }
+      _message = nfcOperation == NFCOperation.read
+          ? "Scanning..."
+          : "Writing to Tag...";
       notifyListeners();
 
       NfcManager.instance.startSession(
         onDiscovered: (NfcTag nfcTag) async {
-          if (nfcOperation == NFCOperation.read) {
-            await _readFromTag(tag: nfcTag);
-          } else if (nfcOperation == NFCOperation.write) {
-            await _writeToTag(
-                nfcTag: nfcTag, dataType: dataType, payload: payload);
+          try {
+            if (nfcOperation == NFCOperation.read) {
+              await _readFromTag(tag: nfcTag);
+            } else if (nfcOperation == NFCOperation.write) {
+              await _writeToTag(
+                  nfcTag: nfcTag, dataType: dataType, payload: payload);
+            }
             _message = "Done";
+            _isSuccess = true;
+          } catch (e) {
+            _message = "Failed: ${e.toString()}";
+            _isSuccess = false;
           }
           _isProcessing = false;
           notifyListeners();
@@ -104,51 +103,57 @@ class NFCNotifier extends ChangeNotifier {
         },
         onError: (e) async {
           _isProcessing = false;
-          _message = e.toString();
+          _isSuccess = false;
+          _message = "Error: ${e.toString()}";
           notifyListeners();
         },
       );
       return true;
     } catch (e) {
       _isProcessing = false;
-      _message = e.toString();
+      _isSuccess = false;
+      _message = "Exception: ${e.toString()}";
       notifyListeners();
       return false;
     }
   }
 
   Future<void> _readFromTag({required NfcTag tag}) async {
-    // Example: extract NDEF data if available.
-    Map<String, dynamic> nfcData = {
-      'nfca': tag.data['nfca'],
-      'mifareultralight': tag.data['mifareultralight'],
-      'ndef': tag.data['ndef']
-    };
+    try {
+      Map<String, dynamic> nfcData = {
+        'nfca': tag.data['nfca'],
+        'mifareultralight': tag.data['mifareultralight'],
+        'ndef': tag.data['ndef']
+      };
 
-    String? decodedText;
-    if (nfcData.containsKey('ndef') && nfcData['ndef'] != null) {
-      try {
-        List<int> payload =
-            nfcData['ndef']['cachedMessage']?['records']?[0]['payload'];
-        decodedText = String.fromCharCodes(payload);
-      } catch (e) {
-        decodedText = null;
+      String? decodedText;
+      if (nfcData.containsKey('ndef') && nfcData['ndef'] != null) {
+        try {
+          List<int> payload =
+              nfcData['ndef']['cachedMessage']?['records']?[0]['payload'];
+          decodedText = String.fromCharCodes(payload);
+        } catch (e) {
+          decodedText = null;
+        }
       }
-    }
 
-    if (decodedText != null && decodedText.isNotEmpty) {
-      _message = "NFC Read Successfully!\nData: $decodedText";
-      _isSuccess = true;
-    } else {
-      _message = "No Data Found";
+      if (decodedText != null && decodedText.isNotEmpty) {
+        _message = "NFC Read Successfully!\nData: $decodedText";
+        _isSuccess = true;
+      } else {
+        _message = "No Data Found";
+        _isSuccess = false;
+      }
+      notifyListeners();
+
+      if (decodedText != null && decodedText.startsWith('tel:')) {
+        String phoneNumber = decodedText.replaceFirst('tel:', '');
+        _dialPhone(phoneNumber);
+      }
+    } catch (e) {
+      _message = "Read Failed: ${e.toString()}";
       _isSuccess = false;
-    }
-    notifyListeners();
-
-    // If the tag contains a phone number, dial it.
-    if (decodedText != null && decodedText.startsWith('tel:')) {
-      String phoneNumber = decodedText.replaceFirst('tel:', '');
-      _dialPhone(phoneNumber);
+      notifyListeners();
     }
   }
 
@@ -157,65 +162,55 @@ class NFCNotifier extends ChangeNotifier {
     required String dataType,
     String? payload,
   }) async {
-    NdefMessage message =
-        _createNdefMessage(dataType: dataType, payload: payload);
-    await Ndef.from(nfcTag)?.write(message);
+    try {
+      NdefMessage message =
+          _createNdefMessage(dataType: dataType, payload: payload);
+      await Ndef.from(nfcTag)?.write(message);
+      _message = "Data Written Successfully";
+      _isSuccess = true;
+    } catch (e) {
+      _message = "Write Failed: ${e.toString()}";
+      _isSuccess = false;
+    }
+    notifyListeners();
   }
 
-  /// Creates an NDEF message based on [dataType].
-  /// For types like 'MAIL' or 'CALL', if a [payload] is provided from the UI,
-  /// that value will be used instead of the default.
-  NdefMessage _createNdefMessage({
-    required String dataType,
-    String? payload,
-  }) {
+  NdefMessage _createNdefMessage({required String dataType, String? payload}) {
     switch (dataType) {
       case 'URL':
-        final url = payload ?? "No URL found";
-        return NdefMessage([
-          NdefRecord.createUri(Uri.parse(url)),
-        ]);
+        return NdefMessage(
+            [NdefRecord.createUri(Uri.parse(payload ?? "No URL found"))]);
       case 'MAIL':
-        final emailData = payload ?? 'No email data';
-        return NdefMessage([
-          NdefRecord.createUri(Uri.parse(emailData)),
-        ]);
+        return NdefMessage(
+            [NdefRecord.createUri(Uri.parse(payload ?? 'No email data'))]);
       case 'CONTACT':
-        final contactData = payload ?? 'no contact found';
-        Uint8List contactBytes = Uint8List.fromList(utf8.encode(contactData));
-        return NdefMessage([NdefRecord.createMime('text/vcard', contactBytes)]);
+        return NdefMessage([
+          NdefRecord.createMime('text/vcard',
+              Uint8List.fromList(utf8.encode(payload ?? 'No contact found')))
+        ]);
       case 'CALL':
-        final phoneNumber = payload ?? 'NO Phone Number';
+        if (payload == null || payload.isEmpty) {
+          return NdefMessage([]); // Return an empty NdefMessage if no payload
+        }
+        String phoneNumber = "tel:$payload"; // Format the phone number as a URI
         return NdefMessage([
           NdefRecord.createUri(Uri.parse(phoneNumber)),
         ]);
+
       case 'WIFI':
-        if (payload == null || payload.isEmpty) {
-          return const NdefMessage([]);
-        }
+        if (payload == null || payload.isEmpty) return const NdefMessage([]);
 
-        // Extract values from the payload
         List<String> wifiData = payload.split('|');
-        if (wifiData.length != 4) {
-          return const NdefMessage([]); // Ensure valid format
-        }
+        if (wifiData.length != 4) return const NdefMessage([]);
 
-        final ssid = wifiData[0];
-        final password = wifiData[1];
-        final authType = wifiData[2];
-        final encryptionType = wifiData[3];
-
-        // Format WiFi configuration for NFC
         String wifiConfig =
-            "WIFI:S:$ssid;T:$authType;P:$password;E:$encryptionType;;";
-        Uint8List wifiBytes = Uint8List.fromList(utf8.encode(wifiConfig));
-
+            "WIFI:S:${wifiData[0]};T:${wifiData[2]};P:${wifiData[1]};E:${wifiData[3]};;";
         return NdefMessage([
-          NdefRecord.createMime('application/vnd.wfa.wsc', wifiBytes),
+          NdefRecord.createMime('application/vnd.wfa.wsc',
+              Uint8List.fromList(utf8.encode(wifiConfig)))
         ]);
-
       default:
-        return const NdefMessage([]);
+        return const NdefMessage([]); // Ensure we always return an NdefMessage
     }
   }
 
@@ -224,7 +219,9 @@ class NFCNotifier extends ChangeNotifier {
     if (await canLaunch(dialUri.toString())) {
       await launch(dialUri.toString());
     } else {
-      print('Could not launch $dialUri');
+      _message = 'Could not launch $dialUri';
+      _isSuccess = false;
+      notifyListeners();
     }
   }
 }

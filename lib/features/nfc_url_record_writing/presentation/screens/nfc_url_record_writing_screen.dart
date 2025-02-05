@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nfcreadertools/commons/provider/nfc_notifier.dart';
 import 'package:nfcreadertools/commons/widgets/custom_app_bar.dart';
 import 'package:nfcreadertools/commons/widgets/custom_text_btn.dart';
@@ -29,31 +30,64 @@ class NfcUrlRecordWritingScreen extends StatelessWidget {
             /// Save button with validation
             CustomTextBtn(
               textBtnTitleText: "Save",
-              onTap: () {
+              onTap: () async {
                 if (_formKey.currentState!.validate()) {
-                  /// writing the URL Record data in the NFC Tag
-                  nfcProvider.startNFCOperation(
+                  bool operationStarted = await nfcProvider.startNFCOperation(
                     nfcOperation: NFCOperation.write,
                     dataType: "URL",
                     payload: urlController.text.trim(),
                     context: context,
                   );
+                  if (operationStarted) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Consumer<NFCNotifier>(
+                          builder: (context, nfcNotifier, child) {
+                            return Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  nfcNotifier.isProcessing
+                                      ? Lottie.asset(
+                                          "assets/lottie/reading-animation.json",
+                                          height: 200,
+                                          width: 200,
+                                          fit: BoxFit.contain,
+                                        )
+                                      : nfcNotifier.isSuccess
+                                          ? Lottie.asset(
+                                              "assets/lottie/success-animation.json",
+                                              height: 200,
+                                              width: 200,
+                                              fit: BoxFit.contain,
+                                            )
+                                          : Container(),
+                                  SizedBox(height: 30),
+                                  Text(
+                                    nfcNotifier.isSuccess
+                                        ? "NFC Write Successfully!"
+                                        : "Writing in NFC Tag...",
+                                    style: const TextStyle(
+                                      fontFamily: "DM Sans",
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  }
 
                   // Debug print
                   print("NFC operation result: ${nfcProvider.isSuccess}");
-
-                  // Show a toast based on the result
-                  if (nfcProvider.isSuccess) {
-                    ToastHelper.showSuccessToast(
-                      context: context,
-                      message: "The URL Record is added to the NFC Tag",
-                    );
-                  } else {
-                    ToastHelper.showErrorToast(
-                      context: context,
-                      message: "Not Added successfully!",
-                    );
-                  }
                 }
               },
             ),

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
+import 'package:nfcreadertools/commons/provider/nfc_notifier.dart';
 import 'package:nfcreadertools/commons/widgets/custom_app_bar.dart';
 import 'package:nfcreadertools/commons/widgets/custom_text_btn.dart';
 import 'package:nfcreadertools/commons/widgets/nfc_writing_text_field.dart';
 import 'package:nfcreadertools/core/colors/app_colors.dart';
 import 'package:nfcreadertools/core/helper/toast_helper.dart';
-import 'package:nfcreadertools/features/nfc_location_record_writing/google_map_func/google_map_utils.dart';
+import 'package:provider/provider.dart';
 
 class NfcLocationRecordWritingScreen extends StatefulWidget {
   const NfcLocationRecordWritingScreen({super.key});
@@ -65,36 +67,11 @@ class _NfcLocationRecordWritingScreenState
     return null;
   }
 
-  void _handleSave() {
-    final currentTabIndex = _tabController.index;
-
-    if (currentTabIndex == 0) {
-      // Validate URL Tab
-      if (locationURLController.text.isEmpty) {
-        ToastHelper.showErrorToast(
-          context: context,
-          message: "URL is required!",
-        );
-        return;
-      }
-      IntentUtils.launchGoogleMapsUrl(locationURLController.text);
-    } else {
-      // Validate Latitude/Longitude Tab
-      if (formKey.currentState?.validate() ?? false) {
-        double latitude = double.parse(latitudeController.text.trim());
-        double longitude = double.parse(longitudeController.text.trim());
-        IntentUtils.launchGoogleMaps(latitude, longitude);
-      } else {
-        ToastHelper.showErrorToast(
-          context: context,
-          message: "Latitude & Longitude may be wrong!",
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    /// nfc notifier provider
+    final nfcProvider = Provider.of<NFCNotifier>(context);
+
     return SafeArea(
       child: Form(
         key: formKey,
@@ -106,7 +83,156 @@ class _NfcLocationRecordWritingScreenState
                 actions: [
                   CustomTextBtn(
                     textBtnTitleText: "Save",
-                    onTap: _handleSave,
+                    onTap: () async {
+                      final currentTabIndex = _tabController.index;
+
+                      if (currentTabIndex == 0) {
+                        if (!formKey.currentState!.validate()) return;
+                        // Validate URL Tab
+                        if (locationURLController.text.isEmpty) {
+                          ToastHelper.showErrorToast(
+                            context: context,
+                            message: "URL is required!",
+                          );
+                          return;
+                        }
+
+                        // Convert the input URL into a Google Maps launch URL
+                        bool operationStarted =
+                            await nfcProvider.startNFCOperation(
+                          nfcOperation: NFCOperation.write,
+                          dataType: "URL",
+                          payload: locationURLController.text.trim(),
+                          context: context,
+                        );
+
+                        if (operationStarted) {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Consumer<NFCNotifier>(
+                                builder: (context, nfcNotifier, child) {
+                                  return Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        nfcNotifier.isProcessing
+                                            ? Lottie.asset(
+                                                "assets/lottie/reading-animation.json",
+                                                height: 200,
+                                                width: 200,
+                                                fit: BoxFit.contain,
+                                              )
+                                            : nfcNotifier.isSuccess
+                                                ? Lottie.asset(
+                                                    "assets/lottie/success-animation.json",
+                                                    height: 200,
+                                                    width: 200,
+                                                    fit: BoxFit.contain,
+                                                  )
+                                                : Container(),
+                                        SizedBox(height: 30),
+                                        Text(
+                                          nfcNotifier.isSuccess
+                                              ? "NFC Write Successfully!"
+                                              : "Writing in NFC Tag...",
+                                          style: const TextStyle(
+                                            fontFamily: "DM Sans",
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        }
+                      } else {
+                        // Validate Latitude/Longitude Tab
+                        if (formKey.currentState?.validate() ?? false) {
+                          double latitude =
+                              double.parse(latitudeController.text.trim());
+                          double longitude =
+                              double.parse(longitudeController.text.trim());
+
+                          // Format Google Maps URL with coordinates
+                          String googleMapsUrl =
+                              "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude";
+
+                          bool operationStarted =
+                              await nfcProvider.startNFCOperation(
+                            nfcOperation: NFCOperation.write,
+                            dataType: "URL",
+                            payload: googleMapsUrl,
+                            // Store lat/lng formatted Google Maps URL
+                            context: context,
+                          );
+
+                          if (operationStarted) {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Consumer<NFCNotifier>(
+                                  builder: (context, nfcNotifier, child) {
+                                    return Center(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          nfcNotifier.isProcessing
+                                              ? Lottie.asset(
+                                                  "assets/lottie/reading-animation.json",
+                                                  height: 200,
+                                                  width: 200,
+                                                  fit: BoxFit.contain,
+                                                )
+                                              : nfcNotifier.isSuccess
+                                                  ? Lottie.asset(
+                                                      "assets/lottie/success-animation.json",
+                                                      height: 200,
+                                                      width: 200,
+                                                      fit: BoxFit.contain,
+                                                    )
+                                                  : Container(),
+                                          SizedBox(height: 30),
+                                          Text(
+                                            nfcNotifier.isSuccess
+                                                ? "NFC Write Successfully!"
+                                                : "Writing in NFC Tag...",
+                                            style: const TextStyle(
+                                              fontFamily: "DM Sans",
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        } else {
+                          ToastHelper.showErrorToast(
+                            context: context,
+                            message: "Latitude & Longitude may be wrong!",
+                          );
+                        }
+                      }
+                    },
                   ),
                 ],
                 appBarTitleText: "Add Location",

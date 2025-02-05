@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nfcreadertools/commons/provider/nfc_notifier.dart';
 import 'package:nfcreadertools/commons/widgets/custom_app_bar.dart';
 import 'package:nfcreadertools/commons/widgets/custom_drop_down_text_field.dart';
 import 'package:nfcreadertools/commons/widgets/custom_text_btn.dart';
@@ -16,10 +17,10 @@ class NfcWifiRecordWritingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// wifi setting provider
+    /// Wifi setting provider to get selected options.
     final wifiSettingProvider = Provider.of<WifiSettingsProvider>(context);
 
-    /// controllers
+    /// Controllers for SSID and Password.
     final TextEditingController wifiSSIDController = TextEditingController();
     final TextEditingController wifiPasswordController =
         TextEditingController();
@@ -30,15 +31,83 @@ class NfcWifiRecordWritingScreen extends StatelessWidget {
           actions: [
             CustomTextBtn(
               textBtnTitleText: "Save",
-              onTap: () {
+              onTap: () async {
                 if (_formKey.currentState!.validate()) {
-                  // Handle form submission
-                  print("Form is valid. Submitting data...");
+                  // Retrieve NFCNotifier provider.
+                  final nfcProvider =
+                      Provider.of<NFCNotifier>(context, listen: false);
+
+                  // Construct the payload string from the input fields and dropdown values.
+                  // The payload format is: SSID|Password|AuthType|EncryptionType
+                  final String payload = "${wifiSSIDController.text}|"
+                      "${wifiPasswordController.text}|"
+                      "${wifiSettingProvider.selectedAuthWifiOption}|"
+                      "${wifiSettingProvider.selectedEncryptionWifiOption}";
+
+                  // Start the NFC write operation with the "WIFI" data type.
+                  bool operationStarted = await nfcProvider.startNFCOperation(
+                    context: context,
+                    nfcOperation: NFCOperation.write,
+                    dataType: "WIFI",
+                    payload: payload,
+                  );
+
+                  // Optionally, if you want to show a bottom sheet after a successful start:
+                  if (operationStarted) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Consumer<NFCNotifier>(
+                          builder: (context, nfcNotifier, child) {
+                            return Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  nfcNotifier.isProcessing
+                                      ? SizedBox(
+                                          height: 200.h,
+                                          width: 200.w,
+                                          child:
+                                              const CircularProgressIndicator(),
+                                        )
+                                      : nfcNotifier.isSuccess
+                                          ? SizedBox(
+                                              height: 200.h,
+                                              width: 200.w,
+                                              child: const Icon(
+                                                Icons.check_circle,
+                                                color: Colors.green,
+                                                size: 150,
+                                              ),
+                                            )
+                                          : Container(),
+                                  SizedBox(height: 30.h),
+                                  Text(
+                                    nfcNotifier.isSuccess
+                                        ? "WiFi details written to NFC successfully!"
+                                        : "Writing WiFi details to NFC...",
+                                    style: TextStyle(
+                                      fontFamily: "DM Sans",
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                      fontSize: 18.sp,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  }
                 }
               },
             ),
           ],
-          appBarTitleText: "Add Social Share Record",
+          appBarTitleText: "Add WiFi NFC Record",
           leadingIconOnTap: () {
             GoRouter.of(context).pop();
           },
@@ -57,7 +126,7 @@ class NfcWifiRecordWritingScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  /// Wifi Auth Dropdown Field
+                  /// Wifi Authentication Dropdown Field
                   CustomDropdownTextField<String>(
                     hintText: "Select an option",
                     labelText: "Wifi Authentication",
@@ -115,7 +184,7 @@ class NfcWifiRecordWritingScreen extends StatelessWidget {
 
                   SizedBox(height: 20.h),
 
-                  /// SSID Password Text Field
+                  /// Password Text Field
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                     child: NfcWritingTextField(
