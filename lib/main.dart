@@ -10,6 +10,7 @@ import 'package:nfcreadertools/features/auth/presentation/provider/apple_sign_in
 import 'package:nfcreadertools/features/auth/presentation/provider/email_password_auth_provider.dart';
 import 'package:nfcreadertools/features/auth/presentation/provider/google_sign_in_provider.dart';
 import 'package:nfcreadertools/features/bottom_nav/presentation/provider/bottom_nav_provider.dart';
+import 'package:nfcreadertools/features/nfc_contact_record_writing/provider/contact_provider.dart';
 import 'package:nfcreadertools/features/nfc_social_share_record_writing/provider/nfc_social_share_provider.dart';
 import 'package:nfcreadertools/features/nfc_text_record_writing/provider/nfc_text_record_writing_provider.dart';
 import 'package:nfcreadertools/features/nfc_wifi_record_writing/provider/nfc_wifi_setting_provider.dart';
@@ -70,6 +71,9 @@ class MyApp extends StatelessWidget {
 
         /// nfc notifier provider
         ChangeNotifierProvider(create: (context) => NFCNotifier()),
+
+        /// fetch contact provider
+        ChangeNotifierProvider(create: (context) => ContactProvider()),
       ],
       builder: (context, child) {
         return ScreenUtilInit(

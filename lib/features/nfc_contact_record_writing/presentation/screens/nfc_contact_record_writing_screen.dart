@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nfcreadertools/commons/provider/nfc_notifier.dart';
 import 'package:nfcreadertools/commons/widgets/custom_app_bar.dart';
 import 'package:nfcreadertools/commons/widgets/custom_text_btn.dart';
 import 'package:nfcreadertools/commons/widgets/nfc_writing_text_field.dart';
-import 'package:nfcreadertools/core/colors/app_colors.dart';
-import 'package:nfcreadertools/core/services/custom_haptic.dart';
 import 'package:provider/provider.dart';
 
-class NfcContactRecordWritingScreen extends StatelessWidget {
+class NfcContactRecordWritingScreen extends StatefulWidget {
   const NfcContactRecordWritingScreen({super.key});
 
+  @override
+  State<NfcContactRecordWritingScreen> createState() =>
+      _NfcContactRecordWritingScreenState();
+}
+
+class _NfcContactRecordWritingScreenState
+    extends State<NfcContactRecordWritingScreen> {
   @override
   Widget build(BuildContext context) {
     /// controllers
@@ -23,7 +27,6 @@ class NfcContactRecordWritingScreen extends StatelessWidget {
     final TextEditingController phoneNumberController = TextEditingController();
     final TextEditingController addressController = TextEditingController();
 
-    /// nfc provider
     /// nfc notifier provider
     final nfcProvider = Provider.of<NFCNotifier>(context);
 
@@ -61,15 +64,13 @@ class NfcContactRecordWritingScreen extends StatelessWidget {
                                   nfcNotifier.isProcessing
                                       ? Lottie.asset(
                                           "assets/lottie/reading-animation.json",
-                                          height: 200,
-                                          width: 200,
                                           fit: BoxFit.contain,
                                         )
                                       : nfcNotifier.isSuccess
                                           ? Lottie.asset(
                                               "assets/lottie/success-animation.json",
-                                              height: 200,
-                                              width: 200,
+                                              height: 200.h,
+                                              width: 200.w,
                                               fit: BoxFit.contain,
                                             )
                                           : Container(),
@@ -78,11 +79,11 @@ class NfcContactRecordWritingScreen extends StatelessWidget {
                                     nfcNotifier.isSuccess
                                         ? "NFC Write Successfully!"
                                         : "Writing in NFC Tag...",
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontFamily: "DM Sans",
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black,
-                                      fontSize: 18,
+                                      fontSize: 18.sp,
                                     ),
                                   ),
                                 ],
@@ -122,7 +123,7 @@ class NfcContactRecordWritingScreen extends StatelessWidget {
                   NfcWritingTextField(
                     textEditingController: contactNameController,
                     hintText: "John Doe",
-                    labelText: "*Contact name",
+                    labelText: "Contact name",
                     prefixIcon: Icons.person,
                   ),
 
@@ -167,36 +168,6 @@ class NfcContactRecordWritingScreen extends StatelessWidget {
                     hintText: "01 Puducherry City",
                     labelText: "Address",
                     prefixIcon: Icons.location_city,
-                  ),
-
-                  /// importing form the mobile
-                  TextButton(
-                    onPressed: () {
-                      CustomHapticFeedbackUtility.mediumImpact();
-                    },
-                    child: Row(
-                      spacing: 10.w,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Import From Contact",
-                          style: TextStyle(
-                            fontFamily: "DM Sans",
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                        SvgPicture.asset(
-                          "assets/icons/svg/contact-record.svg",
-                          height: 20.h,
-                          width: 20.w,
-                          fit: BoxFit.cover,
-                          color: AppColors.primaryColor,
-                        ),
-                      ],
-                    ),
                   ),
                 ],
               ),

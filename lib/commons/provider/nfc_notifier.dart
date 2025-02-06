@@ -181,8 +181,15 @@ class NFCNotifier extends ChangeNotifier {
         return NdefMessage(
             [NdefRecord.createUri(Uri.parse(payload ?? "No URL found"))]);
       case 'MAIL':
+        String emailData = 'mailto:$payload';
         return NdefMessage(
-            [NdefRecord.createUri(Uri.parse(payload ?? 'No email data'))]);
+          [
+            NdefRecord.createUri(
+              Uri.parse(emailData),
+            ),
+          ],
+        );
+
       case 'CONTACT':
         return NdefMessage([
           NdefRecord.createMime('text/vcard',

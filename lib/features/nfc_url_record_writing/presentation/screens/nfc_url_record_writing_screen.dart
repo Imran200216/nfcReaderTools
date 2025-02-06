@@ -6,7 +6,6 @@ import 'package:nfcreadertools/commons/provider/nfc_notifier.dart';
 import 'package:nfcreadertools/commons/widgets/custom_app_bar.dart';
 import 'package:nfcreadertools/commons/widgets/custom_text_btn.dart';
 import 'package:nfcreadertools/commons/widgets/nfc_writing_text_field.dart';
-import 'package:nfcreadertools/core/helper/toast_helper.dart';
 import 'package:provider/provider.dart';
 
 class NfcUrlRecordWritingScreen extends StatelessWidget {
