@@ -13,6 +13,11 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// Get the current user for firebase
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+    final currentUserName = currentUser?.displayName ?? "No Name";
+    final currentUserEmail = currentUser?.email ?? "No Email";
+
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -36,10 +41,10 @@ class SettingsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    /// email address text
+                    /// Settings title text
                     Text(
-                      textAlign: TextAlign.center,
                       "Settings",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: "DM Sans",
                         fontSize: 16.sp,
@@ -47,13 +52,11 @@ class SettingsScreen extends StatelessWidget {
                         color: AppColors.whiteColor,
                       ),
                     ),
-
                     SizedBox(height: 20.h),
-
                     Row(
-                      spacing: 14.w,
+                      spacing: 20.w,
                       children: [
-                        // profile image
+                        // Profile image
                         Container(
                           height: 60.h,
                           width: 60.h,
@@ -63,30 +66,28 @@ class SettingsScreen extends StatelessWidget {
                           child: ClipOval(
                             child: CachedNetworkImage(
                               imageUrl:
-                                  "https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?q=80&w=1966&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                                  currentUser?.photoURL ?? "default_image_url",
+                              // Add default image URL if null
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Image.asset(
                                 "assets/img/jpg/person-placeholder.jpeg",
-                                // Path to your placeholder image
+                                // Path to placeholder image
                                 fit: BoxFit.cover,
                               ),
                               errorWidget: (context, url, error) => Image.asset(
                                 "assets/img/jpg/person-placeholder.jpeg",
-                                // Path to your error image
+                                // Path to error image
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
                         ),
-
                         Column(
-                          spacing: 4.h,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            /// person name
+                            /// User name
                             Text(
-                              "Mohammed Imran",
+                              currentUserName,
                               style: TextStyle(
                                 fontFamily: "DM Sans",
                                 fontWeight: FontWeight.w700,
@@ -95,9 +96,9 @@ class SettingsScreen extends StatelessWidget {
                               ),
                             ),
 
-                            /// email address
+                            /// User email
                             Text(
-                              "mohammedimran@gmail.com",
+                              currentUserEmail,
                               style: TextStyle(
                                 fontFamily: "DM Sans",
                                 fontWeight: FontWeight.w600,
@@ -114,49 +115,35 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 12.h),
-
-            /// about dev
+            // About Dev section
             CustomProfileListTile(
               listTileTitleText: "About Dev",
               listTileOnTap: () {
-                /// my profile website
-                launchUrl(
-                  Uri.parse("https://linktr.ee/Imran_B"),
-                );
+                launchUrl(Uri.parse("https://linktr.ee/Imran_B"));
               },
               leadingIconPath: "dev",
             ),
-
             CustomProfileDivider(),
-
-            /// review app
+            // Other options like review, share, privacy policy, etc.
             CustomProfileListTile(
               listTileTitleText: "Review App",
               listTileOnTap: () {},
               leadingIconPath: "review",
             ),
-
             CustomProfileDivider(),
-
-            /// review app
             CustomProfileListTile(
               listTileTitleText: "Share App",
               listTileOnTap: () {},
               leadingIconPath: "share",
             ),
-
             CustomProfileDivider(),
-
-            /// privacy policy
             CustomProfileListTile(
               listTileTitleText: "Privacy policy",
               listTileOnTap: () {},
               leadingIconPath: "privacy-policy",
             ),
-
             CustomProfileDivider(),
-
-            /// log out
+            // Logout
             CustomProfileListTile(
               listTileTitleText: "Logout",
               listTileOnTap: () {
@@ -169,7 +156,6 @@ class SettingsScreen extends StatelessWidget {
               },
               leadingIconPath: "logout",
             ),
-
             CustomProfileDivider(),
           ],
         ),
