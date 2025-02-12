@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nfcreadertools/core/colors/app_colors.dart';
 import 'package:nfcreadertools/features/settings/presentation/widgets/custom_profile_divider.dart';
 import 'package:nfcreadertools/features/settings/presentation/widgets/custom_profile_list_tile.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -119,6 +121,7 @@ class SettingsScreen extends StatelessWidget {
             CustomProfileListTile(
               listTileTitleText: "About Dev",
               listTileOnTap: () {
+                /// dev portfolio
                 launchUrl(Uri.parse("https://linktr.ee/Imran_B"));
               },
               leadingIconPath: "dev",
@@ -131,15 +134,32 @@ class SettingsScreen extends StatelessWidget {
               leadingIconPath: "review",
             ),
             CustomProfileDivider(),
+
+            /// share app functionality
             CustomProfileListTile(
               listTileTitleText: "Share App",
-              listTileOnTap: () {},
+              listTileOnTap: () {
+                /// share functionality (Share our app)
+                // Share.shareXFiles(
+                //   [
+                //     XFile(
+                //       'https://play.google.com/store/apps/details?id=com.princeappstudio.nfctools',
+                //     )
+                //   ],
+                //   text: 'Check out my app!',
+                // );
+              },
               leadingIconPath: "share",
             ),
             CustomProfileDivider(),
+
+            /// privacy policy
             CustomProfileListTile(
               listTileTitleText: "Privacy policy",
-              listTileOnTap: () {},
+              listTileOnTap: () {
+                /// privacy policy
+                launchUrl(Uri.parse("https://linktr.ee/Imran_B"));
+              },
               leadingIconPath: "privacy-policy",
             ),
             CustomProfileDivider(),
@@ -148,7 +168,16 @@ class SettingsScreen extends StatelessWidget {
               listTileTitleText: "Logout",
               listTileOnTap: () {
                 FirebaseAuth.instance.signOut().then(
-                  (value) {
+                  (value) async {
+                    /// Remove GetStatus in Hive
+                    var getStartedBox = Hive.box('');
+                    await getStartedBox.put('userGetStartedStatus', false);
+
+                    /// Remove Auth Status in Hive
+                    var authBox = Hive.box('userAuthStatusBox');
+                    await authBox.put('userAuthStatus', false);
+
+                    /// get started screen
                     GoRouter.of(context)
                         .pushReplacementNamed("getStartedFirstScreen");
                   },

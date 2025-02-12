@@ -26,7 +26,7 @@ class AppRouter {
         name: "splashScreen",
         builder: (context, state) {
           return SplashScreen(
-            onDecideRoute: _decideNextRoute,
+            onDecideRoute: decideNextRoute,
           );
         },
       ),
@@ -168,15 +168,22 @@ class AppRouter {
     ],
   );
 
-  static Future<String> _decideNextRoute() async {
+  static Future<String> decideNextRoute() async {
     /// To check the get started status for user
     var userGetStartedBox = Hive.box("userGetStartedStatusBox");
     bool userGetStartedStatus =
         userGetStartedBox.get("userGetStartedStatus", defaultValue: false);
 
+    /// To check the get started status for user
+    var userAuthBox = Hive.box("userAuthStatusBox");
+    bool userAuthStatusBox =
+        userAuthBox.get("userAuthStatus", defaultValue: false);
+
     // Return the appropriate route based on login status
-    if (userGetStartedStatus) {
+    if (userGetStartedStatus && userAuthStatusBox) {
       return "/bottomNav";
+    } else if (userGetStartedStatus) {
+      return "/authLoginScreen";
     } else {
       return "/getStartedFirstScreen";
     }

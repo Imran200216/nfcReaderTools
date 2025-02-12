@@ -23,7 +23,8 @@ class GetStartedThirdScreen extends StatelessWidget {
             var box = await Hive.openBox('userGetStartedStatusBox');
             await box.put('userGetStartedStatus', true).then(
               (value) {
-                GoRouter.of(context).pushReplacementNamed("authSignUpScreen");
+                /// login screen
+                GoRouter.of(context).pushReplacementNamed("authLoginScreen");
               },
             );
           },

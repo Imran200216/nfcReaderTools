@@ -26,9 +26,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  /// local storage for saving the get started status
   await Hive.initFlutter();
+
+  /// local storage for saving the get started status
   await Hive.openBox('userGetStartedStatusBox');
+
+  /// local storage for saving the user auth status
+  await Hive.openBox("userAuthStatusBox");
 
   /// safe area bg color
   SystemChrome.setSystemUIOverlayStyle(

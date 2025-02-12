@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nfcreadertools/commons/provider/nfc_notifier.dart';
 import 'package:nfcreadertools/commons/widgets/custom_app_bar.dart';
 import 'package:nfcreadertools/commons/widgets/custom_drop_down_text_field.dart';
@@ -66,33 +67,30 @@ class NfcWifiRecordWritingScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   nfcNotifier.isProcessing
-                                      ? SizedBox(
-                                          height: 200.h,
-                                          width: 200.w,
-                                          child:
-                                              const CircularProgressIndicator(),
+                                      ? Lottie.asset(
+                                          "assets/lottie/reading-animation.json",
+                                          height: 200,
+                                          width: 200,
+                                          fit: BoxFit.contain,
                                         )
                                       : nfcNotifier.isSuccess
-                                          ? SizedBox(
-                                              height: 200.h,
-                                              width: 200.w,
-                                              child: const Icon(
-                                                Icons.check_circle,
-                                                color: Colors.green,
-                                                size: 150,
-                                              ),
+                                          ? Lottie.asset(
+                                              "assets/lottie/success-animation.json",
+                                              height: 200,
+                                              width: 200,
+                                              fit: BoxFit.contain,
                                             )
                                           : Container(),
-                                  SizedBox(height: 30.h),
+                                  SizedBox(height: 30),
                                   Text(
                                     nfcNotifier.isSuccess
-                                        ? "WiFi details written to NFC successfully!"
-                                        : "Writing WiFi details to NFC...",
-                                    style: TextStyle(
+                                        ? "NFC Write Successfully!"
+                                        : "Writing in NFC Tag...",
+                                    style: const TextStyle(
                                       fontFamily: "DM Sans",
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black,
-                                      fontSize: 18.sp,
+                                      fontSize: 18,
                                     ),
                                   ),
                                 ],

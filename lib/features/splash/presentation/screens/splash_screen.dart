@@ -16,16 +16,29 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool _isAnimationCompleted = false;
+  late GoRouter _router;
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _router = GoRouter.of(context);
+  }
+
+  /// navigation after animation
   void _navigateAfterAnimation() async {
     final nextRoute = await widget.onDecideRoute();
     if (mounted) {
-      context.replace(nextRoute);
+      _router.replace(nextRoute);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration(seconds: 1), () async {
+      if (!_isAnimationCompleted) {
+        _navigateAfterAnimation();
+      }
+    });
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       body: Stack(

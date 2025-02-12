@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nfcreadertools/commons/widgets/custom_icon_filled_btn.dart';
 import 'package:nfcreadertools/commons/widgets/custom_outlined_icon_btn.dart';
 import 'package:nfcreadertools/commons/widgets/custom_text_field.dart';
@@ -17,7 +18,7 @@ import 'package:provider/provider.dart';
 class AuthLoginScreen extends StatelessWidget {
   AuthLoginScreen({super.key});
 
-  /// Form key for validation¬
+  /// Form key for validation
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// Controllers
@@ -47,7 +48,7 @@ class AuthLoginScreen extends StatelessWidget {
           child: Stack(
             children: [
               Form(
-                key: _formKey, // Attach form key
+                key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -135,7 +136,12 @@ class AuthLoginScreen extends StatelessWidget {
                             authLoginPasswordController.text.trim(),
                             context,
                           )
-                              .then((value) {
+                              .then((value) async {
+                            /// Save Auth Status in Hive
+                            var box = Hive.box('userAuthStatusBox');
+                            await box.put('userAuthStatus', true);
+
+                            /// bottom nav
                             GoRouter.of(context).pushNamed("bottomNav");
                           });
                         }
@@ -177,13 +183,19 @@ class AuthLoginScreen extends StatelessWidget {
 
                     SizedBox(height: 30.h),
 
+                    /// sign in with google buttons
                     Platform.isAndroid
                         ? CustomOutlinedIconBtn(
                             onTap: () {
                               googleSignInProvider
                                   .signInWithGoogle(context)
                                   .then(
-                                (value) {
+                                (value) async {
+                                  /// Save Auth Status in Hive
+                                  var box = Hive.box('userAuthStatusBox');
+                                  await box.put('userAuthStatus', true);
+
+                                  /// bottom nav
                                   GoRouter.of(context)
                                       .pushReplacementNamed("bottomNav");
                                 },
@@ -208,6 +220,7 @@ class AuthLoginScreen extends StatelessWidget {
                                       .signInWithGoogle(context)
                                       .then(
                                     (value) {
+                                      /// bottom nav
                                       GoRouter.of(context)
                                           .pushReplacementNamed("bottomNav");
                                     },

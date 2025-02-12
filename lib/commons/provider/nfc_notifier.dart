@@ -178,8 +178,11 @@ class NFCNotifier extends ChangeNotifier {
   NdefMessage _createNdefMessage({required String dataType, String? payload}) {
     switch (dataType) {
       case 'URL':
-        return NdefMessage(
-            [NdefRecord.createUri(Uri.parse(payload ?? "No URL found"))]);
+        return NdefMessage([
+          NdefRecord.createUri(
+            Uri.parse(payload ?? "No URL found"),
+          ),
+        ]);
       case 'MAIL':
         String emailData = 'mailto:$payload';
         return NdefMessage(
@@ -192,8 +195,12 @@ class NFCNotifier extends ChangeNotifier {
 
       case 'CONTACT':
         return NdefMessage([
-          NdefRecord.createMime('text/vcard',
-              Uint8List.fromList(utf8.encode(payload ?? 'No contact found')))
+          NdefRecord.createMime(
+            'text/vcard',
+            Uint8List.fromList(
+              utf8.encode(payload ?? 'No contact found'),
+            ),
+          ),
         ]);
       case 'CALL':
         if (payload == null || payload.isEmpty) {
@@ -201,7 +208,11 @@ class NFCNotifier extends ChangeNotifier {
         }
         String phoneNumber = "tel:$payload"; // Format the phone number as a URI
         return NdefMessage([
-          NdefRecord.createUri(Uri.parse(phoneNumber)),
+          NdefRecord.createUri(
+            Uri.parse(
+              phoneNumber,
+            ),
+          ),
         ]);
 
       case 'WIFI':
@@ -211,10 +222,15 @@ class NFCNotifier extends ChangeNotifier {
         if (wifiData.length != 4) return const NdefMessage([]);
 
         String wifiConfig =
-            "WIFI:S:${wifiData[0]};T:${wifiData[2]};P:${wifiData[1]};E:${wifiData[3]};;";
+            "WIFI:S:${wifiData[0]};T:${wifiData[2]};P:${wifiData[1]};H:false;;";
+
         return NdefMessage([
-          NdefRecord.createMime('application/vnd.wfa.wsc',
-              Uint8List.fromList(utf8.encode(wifiConfig)))
+          NdefRecord.createMime(
+            'application/vnd.wfa.wsc',
+            Uint8List.fromList(
+              utf8.encode(wifiConfig),
+            ),
+          ),
         ]);
       default:
         return const NdefMessage([]); // Ensure we always return an NdefMessage

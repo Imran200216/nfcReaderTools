@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nfcreadertools/commons/widgets/custom_icon_filled_btn.dart';
 import 'package:nfcreadertools/commons/widgets/custom_text_field.dart';
 import 'package:nfcreadertools/core/colors/app_colors.dart';
@@ -160,7 +161,12 @@ class AuthSignUpScreen extends StatelessWidget {
                         context,
                       )
                           .then(
-                        (value) {
+                        (value) async {
+                          /// Save Auth Status in Hive
+                          var box = Hive.box('userAuthStatusBox');
+                          await box.put('userAuthStatus', true);
+
+                          /// bottom nav
                           GoRouter.of(context)
                               .pushReplacementNamed("bottomNav");
                         },
