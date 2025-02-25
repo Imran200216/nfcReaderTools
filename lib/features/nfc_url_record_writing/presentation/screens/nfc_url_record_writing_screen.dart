@@ -52,8 +52,6 @@ class NfcUrlRecordWritingScreen extends StatelessWidget {
                                   nfcNotifier.isProcessing
                                       ? Lottie.asset(
                                           "assets/lottie/reading-animation.json",
-                                          height: 200,
-                                          width: 200,
                                           fit: BoxFit.contain,
                                         )
                                       : nfcNotifier.isSuccess

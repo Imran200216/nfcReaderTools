@@ -4,7 +4,7 @@ import 'package:nfcreadertools/core/colors/app_colors.dart';
 import 'package:nfcreadertools/features/bottom_nav/presentation/provider/bottom_nav_provider.dart';
 import 'package:nfcreadertools/features/bottom_nav/presentation/widgets/bottom_nav_icon.dart';
 import 'package:nfcreadertools/features/nfc_tools/presentation/screens/nfc_tools_screen.dart';
-import 'package:nfcreadertools/features/saved_tags/presentation/screens/saved_tags_screen.dart';
+import 'package:nfcreadertools/features/NFC_tutorial/presentation/screens/nfc_tutorial_screen.dart';
 import 'package:nfcreadertools/features/settings/presentation/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +49,7 @@ class BottomNav extends StatelessWidget {
                     selectedIcon:
                         BottomNavIcon(svgIconPath: "saved-tags-filled"),
                     icon: BottomNavIcon(svgIconPath: "saved-tags-outlined"),
-                    label: "Saved Tags",
+                    label: "NFC Tutorial",
                   ),
                   NavigationDestination(
                     selectedIcon: BottomNavIcon(svgIconPath: "settings-filled"),
@@ -67,7 +67,7 @@ class BottomNav extends StatelessWidget {
               case 0:
                 return NfcToolsScreen();
               case 1:
-                return SavedTagsScreen();
+                return NFCTutorialScreen();
               case 2:
                 return const SettingsScreen();
               default:

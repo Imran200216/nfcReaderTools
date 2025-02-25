@@ -1,0 +1,2 @@
+/Users/imran/StudioProjects/nfcReaderTools/android/app/.cxx/Debug/5q4l11pz/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/imran/StudioProjects/nfcReaderTools/android/app/.cxx/Debug/5q4l11pz/armeabi-v7a/CMakeFiles/rebuild_cache.dir

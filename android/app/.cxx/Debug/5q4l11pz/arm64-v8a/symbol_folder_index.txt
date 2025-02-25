@@ -1,0 +1,1 @@
+/Users/imran/StudioProjects/nfcReaderTools/build/app/intermediates/cxx/Debug/5q4l11pz/obj/arm64-v8a

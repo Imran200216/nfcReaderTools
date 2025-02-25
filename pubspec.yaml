@@ -69,6 +69,8 @@ dependencies:
   cloud_firestore: ^5.6.3
   # share plus
   share_plus: ^10.1.4
+  # youtube player 
+  youtube_player_flutter: ^9.1.1
 
 
 
