@@ -10,25 +10,41 @@ import 'package:nfcreadertools/features/auth/presentation/widgets/custom_auth_fo
 import 'package:nfcreadertools/features/auth/presentation/widgets/custom_auth_headers.dart';
 import 'package:provider/provider.dart';
 
-class AuthSignUpScreen extends StatelessWidget {
+class AuthSignUpScreen extends StatefulWidget {
   const AuthSignUpScreen({super.key});
 
   @override
+  State<AuthSignUpScreen> createState() => _AuthSignUpScreenState();
+}
+
+class _AuthSignUpScreenState extends State<AuthSignUpScreen> {
+  /// auth sign up form key
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  /// text field controllers
+  final TextEditingController authSignUpUserNameController =
+      TextEditingController();
+  final TextEditingController authSignUpEmailController =
+      TextEditingController();
+  final TextEditingController authSignUpPasswordController =
+      TextEditingController();
+  final TextEditingController authSignUpConfirmPasswordController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    authSignUpUserNameController.dispose();
+    authSignUpEmailController.dispose();
+    authSignUpPasswordController.dispose();
+    authSignUpConfirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    /// auth sign up form key
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-    /// text field controllers
-    final TextEditingController authSignUpEmailController =
-        TextEditingController();
-    final TextEditingController authSignUpPasswordController =
-        TextEditingController();
-    final TextEditingController authSignUpConfirmPasswordController =
-        TextEditingController();
-
     /// email auth provider
     final emailPasswordAuthProvider =
-        Provider.of<EmailPasswordAuthProvider>(context, listen: false);
+        Provider.of<EmailPasswordAuthProvider>(context);
 
     return SafeArea(
       child: Scaffold(
@@ -48,6 +64,41 @@ class AuthSignUpScreen extends StatelessWidget {
                 ),
 
                 SizedBox(height: 30.h),
+
+                /// UserName text
+                Text(
+                  textAlign: TextAlign.center,
+                  "Username",
+                  style: TextStyle(
+                    fontFamily: "DM Sans",
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.titleColor,
+                  ),
+                ),
+
+                SizedBox(height: 12.h),
+
+                /// UserName text field
+                CustomTextField(
+                  keyboardType: TextInputType.name,
+                  textEditingController: authSignUpUserNameController,
+                  hintText: "Enter your name",
+                  prefixIcon: Icons.person_outline,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Name is required";
+                    } else if (value.trim().length < 3) {
+                      return "Name must be at least 3 characters long";
+                    } else if (!RegExp(r"^[a-zA-Z\s]+$")
+                        .hasMatch(value.trim())) {
+                      return "Name must contain only letters and spaces";
+                    }
+                    return null;
+                  },
+                ),
+
+                SizedBox(height: 15.h),
 
                 /// email address text
                 Text(
@@ -156,6 +207,7 @@ class AuthSignUpScreen extends StatelessWidget {
                       /// sign up functionality
                       emailPasswordAuthProvider
                           .signUpWithEmailPassword(
+                        authSignUpUserNameController.text.trim(),
                         authSignUpEmailController.text.trim(),
                         authSignUpPasswordController.text.trim(),
                         context,

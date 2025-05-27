@@ -130,7 +130,7 @@ class NFCNotifier extends ChangeNotifier {
       if (nfcData.containsKey('ndef') && nfcData['ndef'] != null) {
         try {
           List<int> payload =
-              nfcData['ndef']['cachedMessage']?['records']?[0]['payload'];
+          nfcData['ndef']['cachedMessage']?['records']?[0]['payload'];
           decodedText = String.fromCharCodes(payload);
         } catch (e) {
           decodedText = null;
@@ -164,7 +164,7 @@ class NFCNotifier extends ChangeNotifier {
   }) async {
     try {
       NdefMessage message =
-          _createNdefMessage(dataType: dataType, payload: payload);
+      _createNdefMessage(dataType: dataType, payload: payload);
       await Ndef.from(nfcTag)?.write(message);
       _message = "Data Written Successfully";
       _isSuccess = true;

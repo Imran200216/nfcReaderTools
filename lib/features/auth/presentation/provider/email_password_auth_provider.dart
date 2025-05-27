@@ -16,18 +16,29 @@ class EmailPasswordAuthProvider extends ChangeNotifier {
 
   /// Sign up with email and password
   Future<void> signUpWithEmailPassword(
-      String emailAddress, String password, BuildContext context) async {
+      String name, // <-- Add name parameter
+      String emailAddress,
+      String password,
+      BuildContext context,
+      ) async {
     _setLoading(true);
     try {
+      // Create user with email and password
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
 
-      /// storing the user data in the db
-      await FirebaseFirestore.instance.collection("users").doc().set({
+      // Set display name for Firebase user
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
+
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+
+      // Store user data in Firestore
+      await FirebaseFirestore.instance.collection("users").doc(uid).set({
+        "userName": name,
         "userEmail": emailAddress,
-        "userUID": FirebaseAuth.instance.currentUser!.uid,
+        "userUID": uid,
       });
 
       ToastHelper.showSuccessToast(
@@ -63,6 +74,7 @@ class EmailPasswordAuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
   /// Sign in with email and password
   Future<void> signInWithEmailPassword(
       String emailAddress, String password, BuildContext context) async {
@@ -70,6 +82,7 @@ class EmailPasswordAuthProvider extends ChangeNotifier {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(
+
         email: emailAddress,
         password: password,
       )

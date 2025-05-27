@@ -15,17 +15,30 @@ import 'package:nfcreadertools/features/auth/presentation/widgets/custom_auth_he
 import 'package:nfcreadertools/features/auth/presentation/widgets/custom_auth_social_sign_in_btn.dart';
 import 'package:provider/provider.dart';
 
-class AuthLoginScreen extends StatelessWidget {
-  AuthLoginScreen({super.key});
+class AuthLoginScreen extends StatefulWidget {
+  const AuthLoginScreen({super.key});
 
+  @override
+  State<AuthLoginScreen> createState() => _AuthLoginScreenState();
+}
+
+class _AuthLoginScreenState extends State<AuthLoginScreen> {
   /// Form key for validation
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// Controllers
   final TextEditingController authLoginEmailController =
       TextEditingController();
+
   final TextEditingController authLoginPasswordController =
       TextEditingController();
+
+  @override
+  void dispose() {
+    authLoginEmailController.dispose();
+    authLoginEmailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +66,8 @@ class AuthLoginScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     /// Auth Header
-                    CustomAuthHeaders(authHeaderTitle: "Sign In To NFC Reader"),
+                    CustomAuthHeaders(
+                        authHeaderTitle: "Sign In To NFC Reader"),
 
                     SizedBox(height: 30.h),
 

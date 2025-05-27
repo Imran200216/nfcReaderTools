@@ -170,7 +170,7 @@ class SettingsScreen extends StatelessWidget {
                 FirebaseAuth.instance.signOut().then(
                   (value) async {
                     /// Remove GetStatus in Hive
-                    var getStartedBox = Hive.box('');
+                    var getStartedBox = Hive.box('userGetStartedStatusBox');
                     await getStartedBox.put('userGetStartedStatus', false);
 
                     /// Remove Auth Status in Hive
